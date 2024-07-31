@@ -1,0 +1,4 @@
+tasks:
+  - name: Setup AWS CLI
+    init: ./setup.sh
+    command: aws sts get-caller-identity
