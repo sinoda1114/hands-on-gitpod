@@ -4,8 +4,9 @@
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 
 # IAMロール名とセッション名の設定
-IAM_ROLE_NAME="hands-on-iam-role"
+IAM_ROLE_NAME="hands-on-admin-role"
 SESSION_NAME="gitpod-session"
+DURATION_SECONDS=43200  # 12時間（最大値）
 
 # IAMロールの信頼ポリシードキュメント
 TRUST_POLICY='{
@@ -30,7 +31,7 @@ aws iam attach-role-policy --role-name $IAM_ROLE_NAME --policy-arn $ADMIN_POLICY
 sleep 10
 
 # 一時的な認証情報を取得
-CREDENTIALS=$(aws sts assume-role --role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/$IAM_ROLE_NAME --role-session-name $SESSION_NAME --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text)
+CREDENTIALS=$(aws sts assume-role --role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/$IAM_ROLE_NAME --role-session-name $SESSION_NAME --duration-seconds $DURATION_SECONDS --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text)
 
 # 環境変数に設定
 export AWS_ACCESS_KEY_ID=$(echo $CREDENTIALS | cut -f1 -d ' ')
