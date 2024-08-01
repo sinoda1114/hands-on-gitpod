@@ -4,7 +4,7 @@
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 
 # IAMロール名とセッション名の設定
-IAM_ROLE_NAME="hands-on-admin-role"
+IAM_ROLE_NAME="hands-on-iam-role"
 SESSION_NAME="gitpod-session"
 DURATION_SECONDS=43200  # 12時間（最大値）
 
