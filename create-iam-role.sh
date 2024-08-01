@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# 日付を取得してフォーマット
+DATE=$(date +%Y%m%d)
+
 # IAMロール名とポリシーARNの設定
-IAM_ROLE_NAME="hands-on-iam-role"
+IAM_ROLE_NAME="hands-on-iam-role-$DATE"
 ADMIN_POLICY_ARN="arn:aws:iam::aws:policy/AdministratorAccess"
 
 # IAMロールの信頼ポリシードキュメント
@@ -35,3 +38,4 @@ IAM_ROLE_ARN=$(aws iam get-role --role-name $IAM_ROLE_NAME --query 'Role.Arn' --
 
 echo "IAMロール '$IAM_ROLE_NAME' が作成されました。"
 echo "IAMロールのARN: $IAM_ROLE_ARN"
+echo
