@@ -1,37 +1,13 @@
 #!/bin/bash
 
-# AWSアカウントIDを自動的に取得
-AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-
-# IAMロール名とセッション名の設定
-IAM_ROLE_NAME="hands-on-iam-role"
+# IAMロールARNを入力
+echo "Enter the IAM Role ARN (e.g., arn:aws:iam::<AWS_ACCOUNT_ID>:role/hands-on-iam-role):"
+read IAM_ROLE_ARN
 SESSION_NAME="gitpod-session"
 DURATION_SECONDS=43200  # 12時間（最大値）
 
-# IAMロールの信頼ポリシードキュメント
-TRUST_POLICY='{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": "sts:AssumeRole"
-        }
-    ]
-}'
-
-# IAMロールの作成
-aws iam create-role --role-name $IAM_ROLE_NAME --assume-role-policy-document "$TRUST_POLICY"
-
-# 管理者権限を付与
-ADMIN_POLICY_ARN="arn:aws:iam::aws:policy/AdministratorAccess"
-aws iam attach-role-policy --role-name $IAM_ROLE_NAME --policy-arn $ADMIN_POLICY_ARN
-
-# IAMロールが作成されるのを待つ
-sleep 10
-
 # 一時的な認証情報を取得
-CREDENTIALS=$(aws sts assume-role --role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/$IAM_ROLE_NAME --role-session-name $SESSION_NAME --duration-seconds $DURATION_SECONDS --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text)
+CREDENTIALS=$(aws sts assume-role --role-arn $IAM_ROLE_ARN --role-session-name $SESSION_NAME --duration-seconds $DURATION_SECONDS --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text)
 
 # 環境変数に設定
 export AWS_ACCESS_KEY_ID=$(echo $CREDENTIALS | cut -f1 -d ' ')
