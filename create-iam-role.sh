@@ -37,5 +37,6 @@ sleep 10
 IAM_ROLE_ARN=$(aws iam get-role --role-name $IAM_ROLE_NAME --query 'Role.Arn' --output text)
 
 echo "IAMロール '$IAM_ROLE_NAME' が作成されました。"
+echo "以下をメモ帳にコピーしてください"
 echo "IAMロールのARN: $IAM_ROLE_ARN"
 echo
